@@ -4,7 +4,9 @@
 """
 Application de gestion d'une école
 """
-
+import daos
+from daos.teacher_dao import TeacherDao
+from daos.student_dao import StudentDao
 from business.school import School
 
 
@@ -26,6 +28,15 @@ Bienvenue dans notre école
     print(school.get_course_by_id(1))
     print(school.get_course_by_id(2))
     print(school.get_course_by_id(9))
+
+    teacher_dao = TeacherDao()
+    teacher = teacher_dao.read(1)
+
+    print(teacher)
+
+    student_dao = StudentDao()
+    student = student_dao.read(1)
+    print(student)
 
 
 if __name__ == '__main__':
