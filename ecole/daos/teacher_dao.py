@@ -24,24 +24,25 @@ class StudentDao(Dao[Teacher]):
             teacher = None
         return teacher
 
-    def create(teacher: Teacher) -> StudentDao:
-        with Dao.connection.cursor() as cursor:
-            sql = " INSERT INTO student (first_name, last_name, age, hiring_date) VALUES (%s, %s, %s)"
+    def create(self, teacher: Teacher) -> int:
+        try:
+            with Dao.connection.cursor() as cursor:
+                sql = " INSERT INTO student (first_name, last_name, age, hiring_date) VALUES (%s, %s, %s)"
 
-            cursor.execute(
-                sql,
-                (
-                    teacher.first_name,
-                    teacher.last_name,
-                    teacher.age,
-                    teacher.hiring_date
+                cursor.execute(
+                    sql,
+                    (
+                        teacher.first_name,
+                        teacher.last_name,
+                        teacher.age,
+                        teacher.hiring_date
+                    )
                 )
-            )
 
-            Dao.connection.commit()
+                Dao.connection.commit()
 
-            try:
+
                 return cursor.lastrowid
-            except:
-                print("Erreur dans la création du cours")
-                return 0
+        except Exception as error:
+            print(f"Erreur dans la création du cours : {error}")
+            return 0
