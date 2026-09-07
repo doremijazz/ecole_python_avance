@@ -37,7 +37,7 @@ class CourseDao(Dao[Course]):
                 return cursor.lastrowid
         except Exception as error:
             Dao.connection.rollback()
-            print("Erreur dans la création du cours : {error}")
+            print(f"Erreur dans la création du cours : {error}")
             return 0
 
     def read(self, id_course: int) -> Optional[Course]:
@@ -63,7 +63,18 @@ class CourseDao(Dao[Course]):
         :param course: cours déjà mis à jour en mémoire
         :return: True si la mise à jour a pu être réalisée
         """
-        ...
+        try:
+            with Dao.connection.cursor() as cursor:
+                sql = " UPDATE course SET name=%s, start_date=%s, end_date=%s WHERE id_course=%s"
+                cursor.execute(sql, (course.name, course.start_date, course.end_date, course.id))
+                Dao.connection.commit()
+                return True
+        except Exception as error:
+            Dao.connection.rollback()
+            print(f"Erreur pendant la modification du cours : {error}")
+            return False
+
+
         return True
 
     def delete(self, course: Course) -> bool:
