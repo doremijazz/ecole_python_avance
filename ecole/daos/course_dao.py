@@ -83,5 +83,13 @@ class CourseDao(Dao[Course]):
         :param course: cours dont l'entité Course correspondante est à supprimer
         :return: True si la suppression a pu être réalisée
         """
-        ...
-        return True
+        try:
+            with Dao.connection.cursor() as cursor:
+                sql = " DELETE FROM course WHERE id_course=%s"
+                cursor.execute(sql, (course.id,))
+                Dao.connection.commit()
+                return True
+        except Exception as error:
+            Dao.connection.rollback()
+            print(f"Erreur pendant la supression du cours : {error}")
+            return False

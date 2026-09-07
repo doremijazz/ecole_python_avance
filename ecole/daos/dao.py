@@ -26,7 +26,6 @@ class Dao[T](ABC):
         :return: l'id de l'entité insérée en BD (0 si la création a échoué)
         """
         ...
-
     @abstractmethod
     def read(self, id_entity: int) -> Optional[T]:
         """Renvoit l'objet correspondant à l'entité dont l'id est id_entity
