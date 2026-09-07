@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c86a24d7-f81e-49af-bb5e-ad4a0b11967c" name="Changes" comment="" />
+    <list default="true" id="c86a24d7-f81e-49af-bb5e-ad4a0b11967c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecole/daos/course_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecole/daos/course_dao.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecole/daos/student_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecole/daos/student_dao.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ecole/daos/teacher_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecole/daos/teacher_dao.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8,
@@ -22,7 +30,9 @@
     "Python.main.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }

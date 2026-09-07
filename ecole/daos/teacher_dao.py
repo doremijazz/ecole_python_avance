@@ -16,9 +16,32 @@ class StudentDao(Dao[Teacher]):
             teacher = Teacher(
                 record["first_name"],
                 record["last_name"],
-                record["age"]
+                record["age"],
+                record["hiring_date"]
             )
             student.id = record["id_teacher"]
         else:
             teacher = None
         return teacher
+
+    def create(teacher: Teacher) -> StudentDao:
+        with Dao.connection.cursor() as cursor:
+            sql = " INSERT INTO student (first_name, last_name, age, hiring_date) VALUES (%s, %s, %s)"
+
+            cursor.execute(
+                sql,
+                (
+                    teacher.first_name,
+                    teacher.last_name,
+                    teacher.age,
+                    teacher.hiring_date
+                )
+            )
+
+            Dao.connection.commit()
+
+            try:
+                return cursor.lastrowid
+            except:
+                print("Erreur dans la création du cours")
+                return 0
