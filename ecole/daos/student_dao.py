@@ -19,7 +19,7 @@ class StudentDao(Dao[Student]):
                     ON student.id_person = person.id_person
                 WHERE student.student_nbr = %s
             """
-            cursor.execute(sql, (id_student,))
+            cursor.execute(sql, (id_student))
             record = cursor.fetchone()
 
         if record is not None:
@@ -36,10 +36,15 @@ class StudentDao(Dao[Student]):
     def create(self, student: Student) -> int:
         try:
             with Dao.connection.cursor() as cursor:
-                sql = " INSERT INTO student (first_name, last_name, age) VALUES (%s, %s, %s)"
+
+                # 1. Création de la personne
+                sql_person = """
+                                INSERT INTO person (first_name, last_name, age)
+                                VALUES (%s, %s, %s)
+                            """
 
                 cursor.execute(
-                    sql,
+                    sql_person,
                     (
                         student.first_name,
                         student.last_name,
@@ -47,19 +52,30 @@ class StudentDao(Dao[Student]):
                     )
                 )
 
+                id_person = cursor.lastrowid
+
+                # 2. Création dans student
+                sql_student = """
+                    INSERT INTO student (student_nbr, id_person)
+                    VALUES (%s, %s)
+                """
+
+                cursor.execute(sql_student, (student.student_nbr, id_person))
+
+                id_student = cursor.lastrowid
+
                 Dao.connection.commit()
 
-
-                return cursor.lastrowid
+                return student.student_nbr
 
         except Exception as error:
-            print(f"Erreur dans la création du cours : {error}")
+            print(f"Erreur dans la création de l'étudiant : {error}")
             return 0
 
     def update(self, student: Student) -> bool:
         try:
             with Dao.connection.cursor() as cursor:
-                sql = " UPDATE student SET first_name = %s, last_name = %s, age = %s "
+                sql = " UPDATE person SET first_name = %s, last_name = %s, age = %s "
                 cursor.execute(sql, (student.first_name, student.last_name, student.age))
                 Dao.connection.commit()
                 return True
@@ -70,7 +86,7 @@ class StudentDao(Dao[Student]):
     def delete(self, id_student: int) -> bool:
         try:
             with Dao.connection.cursor() as cursor:
-                sql = " DELETE FROM student WHERE id_student = %s "
+                sql = " DELETE FROM student WHERE student_nbr = %s "
                 cursor.execute(sql, (id_student,))
                 Dao.connection.commit()
                 return True

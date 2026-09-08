@@ -22,7 +22,7 @@ class AddressDao(Dao[Address]):
             print(f"Erreur dans la création du cours : {error}")
             return 0
 
-    def read(self, int: id) -> Optional[Address]:
+    def read(self, id: int) -> Optional[Address]:
         with Dao.connection.cursor() as cursor:
             sql = "SELECT * FROM address WHERE id_address = %s"
             cursor.execute(sql, (id))
@@ -39,7 +39,7 @@ class AddressDao(Dao[Address]):
         try:
             with Dao.connection.cursor() as cursor:
                 sql = "UPDATE address SET street = %s, city = %s, postal_code = %s WHERE id_address = %s"
-                cursor.execute(sql, (address.street, address.city, address.postal_code))
+                cursor.execute(sql, (address.street, address.city, address.postal_code, address.id))
                 Dao.connection.commit()
                 return True
 

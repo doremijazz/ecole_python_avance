@@ -38,15 +38,32 @@ class TeacherDao(Dao[Teacher]):
     def create(self, teacher: Teacher) -> int:
         try:
             with Dao.connection.cursor() as cursor:
-                sql = " INSERT INTO student (first_name, last_name, age, hiring_date) VALUES (%s, %s, %s)"
+
+                # 1. Création de la personne
+                sql_person = """
+                            INSERT INTO person (first_name, last_name, age)
+                            VALUES (%s, %s, %s)
+                            """
+
+                cursor.execute(
+                    sql_person,
+                    (
+                        teacher.first_name,
+                        teacher.last_name,
+                        teacher.age
+                    )
+                )
+
+                id_person = cursor.lastrowid
+
+                sql = " INSERT INTO teacher (id_teacher, hiring_date, id_person) VALUES (%s, %s, %s)"
 
                 cursor.execute(
                     sql,
                     (
-                        teacher.first_name,
-                        teacher.last_name,
-                        teacher.age,
-                        teacher.hiring_date
+                        teacher.id,
+                        teacher.hiring_date,
+                        id_person
                     )
                 )
 
@@ -55,13 +72,13 @@ class TeacherDao(Dao[Teacher]):
 
                 return cursor.lastrowid
         except Exception as error:
-            print(f"Erreur dans la création du cours : {error}")
+            print(f"Erreur dans la création de l'enseignant : {error}")
             return 0
 
     def update(self, teacher: Teacher) -> bool:
         try:
             with Dao.connection.cursor() as cursor:
-                sql = "UPDATE teacher SET first_name=%s, last_name=%s, age=%s, hiring_date=%s WHERE id_teacher=%s"
+                sql = "UPDATE person, teacher SET first_name=%s, last_name=%s, age=%s, hiring_date=%s WHERE id_teacher=%s"
                 cursor.execute(sql, (teacher.first_name, teacher.last_name, teacher.age, teacher.hiring_date, teacher.id))
                 Dao.connection.commit()
                 return True

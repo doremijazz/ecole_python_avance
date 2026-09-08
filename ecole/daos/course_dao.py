@@ -3,7 +3,7 @@
 """
 Classe Dao[Course]
 """
-
+from daos.teacher_dao import TeacherDao
 from models.course import Course
 from daos.dao import Dao
 from dataclasses import dataclass
@@ -19,15 +19,24 @@ class CourseDao(Dao[Course]):
         :return: l'id de l'entité insérée en BD (0 si la création a échoué)
         """
         try :
+            if course.teacher is None:
+                print("Erreur : le cours doit avoir un enseignant")
+                return 0
+
+            if course.teacher.id is None:
+                print("Erreur : l'enseignant doit déjà exister en BD")
+                return 0
+
             with Dao.connection.cursor() as cursor:
-                sql = " INSERT INTO course (name, start_date, end_date) VALUES (%s, %s, %s)"
+                sql = " INSERT INTO course (name, start_date, end_date, id_teacher) VALUES (%s, %s, %s, %s)"
 
                 cursor.execute(
                     sql,
                     (
                         course.name,
                         course.start_date,
-                        course.end_date
+                        course.end_date,
+                        course.teacher.id
                     )
                 )
 
@@ -52,6 +61,8 @@ class CourseDao(Dao[Course]):
         if record is not None:
             course = Course(record['name'], record['start_date'], record['end_date'])
             course.id = record['id_course']
+            teacher_dao = TeacherDao()
+            course.teacher = teacher_dao.read(record["id_teacher"])
         else:
             course = None
 
@@ -86,7 +97,7 @@ class CourseDao(Dao[Course]):
         try:
             with Dao.connection.cursor() as cursor:
                 sql = " DELETE FROM course WHERE id_course=%s"
-                cursor.execute(sql, (course.id,))
+                cursor.execute(sql, (course.id))
                 Dao.connection.commit()
                 return True
         except Exception as error:

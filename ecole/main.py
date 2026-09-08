@@ -12,6 +12,8 @@ from models.course import Course
 from models.student import Student
 from models.teacher import Teacher
 
+from daos.dao import Dao
+
 from daos.address_dao import AddressDao
 from daos.course_dao import CourseDao
 from daos.student_dao import StudentDao
@@ -49,19 +51,36 @@ Bienvenue dans notre école
     test_student_dao()
     test_teacher_dao()
 
+def initialize_student_counter() -> None:
+    with Dao.connection.cursor() as cursor:
+        sql = """
+            SELECT COALESCE(MAX(student_nbr), 0) AS max_student_nbr
+            FROM student
+        """
+
+        cursor.execute(sql)
+        record = cursor.fetchone()
+
+    Student.students_nb = record["max_student_nbr"]
 
 def test_course_dao() -> None:
     print("\n===== TEST COURSE DAO =====")
 
     dao = CourseDao()
 
+    teacher_dao = TeacherDao()
+    teacher = teacher_dao.read(1)
+
+    student_dao = StudentDao()
+    student = student_dao.read(1)
     # CREATE
     course = Course(
         "Informatique",
         date(2026, 9, 7),
-        date(2026, 10, 7)
+        date(2026, 10, 7),
     )
-
+    course.teacher = teacher
+    course.student = [student]
     course.id = dao.create(course)
     print("CREATE :", course.id)
 
@@ -79,7 +98,7 @@ def test_course_dao() -> None:
     print("READ après UPDATE :", course_read)
 
     # DELETE
-    delete_success = dao.delete(course.id)
+    delete_success = dao.delete(course)
     print("DELETE :", delete_success)
 
     # READ après suppression
@@ -119,7 +138,7 @@ def test_address_dao() -> None:
     print("READ après UPDATE :", address_read)
 
     # DELETE
-    delete_success = dao.delete(address.id)
+    delete_success = dao.delete(address)
     print("DELETE :", delete_success)
 
     # READ après suppression
@@ -129,7 +148,7 @@ def test_address_dao() -> None:
 
 def test_student_dao() -> None:
     print("\n===== TEST STUDENT DAO =====")
-
+    initialize_student_counter()
     dao = StudentDao()
 
     # CREATE
