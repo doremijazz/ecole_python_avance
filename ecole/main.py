@@ -9,6 +9,7 @@ from datetime import date
 import daos
 from models.address import Address
 from models.course import Course
+from models.person import Person
 from models.student import Student
 from models.teacher import Teacher
 
@@ -19,6 +20,9 @@ from daos.course_dao import CourseDao
 from daos.student_dao import StudentDao
 from daos.teacher_dao import TeacherDao
 from business.school import School
+
+
+
 
 
 def main() -> None:
@@ -51,7 +55,23 @@ Bienvenue dans notre école
     test_student_dao()
     test_teacher_dao()
 
-    test_show_courses()
+    print("""
+        --------------------------
+        TEST FONCTIONALITEES
+        --------------------------
+        """)
+    while(True):
+        choix_1 = input("Choisir une fonctionalités :  1.Show course, 2.Select course")
+        if choix_1 == "1":
+            test_show_courses()
+        elif choix_1 == "2":
+            course_id = input("Saisissez le numéro du cours")
+            choix_2 = input("1. Afficher les élves, 2.Modifier, 3.Suprimer")
+            if choix_2 == "1":
+                CourseDao().show_student(course_id)
+
+
+
 
 def initialize_student_counter() -> None:
     with Dao.connection.cursor() as cursor:
@@ -64,6 +84,18 @@ def initialize_student_counter() -> None:
         record = cursor.fetchone()
 
     Student.students_nb = record["max_student_nbr"]
+
+def initialize_person_counter() -> None:
+    with Dao.connection.cursor() as cursor:
+        sql = """
+            SELECT COALESCE(MAX(id_person), 0) AS max_id_person
+            FROM person
+        """
+
+        cursor.execute(sql)
+        record = cursor.fetchone()
+
+    Person.person_id = record["max_id_person"]
 
 def test_course_dao() -> None:
     print("\n===== TEST COURSE DAO =====")
@@ -151,6 +183,7 @@ def test_address_dao() -> None:
 def test_student_dao() -> None:
     print("\n===== TEST STUDENT DAO =====")
     initialize_student_counter()
+    initialize_person_counter()
     dao = StudentDao()
 
     # CREATE
@@ -190,7 +223,7 @@ def test_student_dao() -> None:
 
 def test_teacher_dao() -> None:
     print("\n===== TEST TEACHER DAO =====")
-
+    initialize_person_counter()
     dao = TeacherDao()
 
     # CREATE

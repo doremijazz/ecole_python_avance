@@ -57,7 +57,7 @@ class Course:
         student.courses_taken.append(self)
 
     def __str__(self) -> str:
-        course_str = f"{self.name} ({self.start_date} – {self.end_date}),\n"
+        course_str = f"Cours numéro {self.id}, Titre : {self.name}, Dates : ({self.start_date} – {self.end_date}),\n"
         course_str += f"enseigné par {self.teacher}" \
             if self.teacher is not None else "pas d'enseignant affecté"
         return course_str

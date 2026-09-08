@@ -3,11 +3,15 @@
 """
 Classe Dao[Course]
 """
+from daos import student_dao
 from daos.teacher_dao import TeacherDao
+from models import course
 from models.course import Course
 from daos.dao import Dao
 from dataclasses import dataclass
 from typing import Optional
+
+from models.student import Student
 
 
 @dataclass
@@ -98,6 +102,9 @@ class CourseDao(Dao[Course]):
             with Dao.connection.cursor() as cursor:
                 sql = " DELETE FROM course WHERE id_course=%s"
                 cursor.execute(sql, (course.id))
+                id_max = cursor.lastrowid
+                sql_increment = "ALTER TABLE course AUTO_INCREMENT = %s;"
+                cursor.execute(sql_increment, (id_max,))
                 Dao.connection.commit()
                 return True
         except Exception as error:
@@ -116,3 +123,26 @@ class CourseDao(Dao[Course]):
 
                 if course is not None:
                     print(course)
+
+    def show_student(self, id_course: int):
+        with Dao.connection.cursor() as cursor:
+            sql = "SELECT student_nbr FROM takes WHERE id_course=%s"
+            cursor.execute(sql, (id_course,))
+            records = cursor.fetchall()
+            # Import local pour éviter l'import circulaire
+            from daos.student_dao import StudentDao
+
+            student_dao = StudentDao()
+            if len(records) == 0:
+                print("Aucun étudiant ne suit ce cours.")
+                return
+
+            for record in records:
+                student_nbr = record["student_nbr"]
+                student = student_dao.read(student_nbr)
+
+                if student is not None:
+                    print(student)
+                else:
+                    print(f"Étudiant n° {student_nbr} introuvable")
+

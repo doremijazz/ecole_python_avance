@@ -79,7 +79,16 @@ class TeacherDao(Dao[Teacher]):
     def update(self, teacher: Teacher) -> bool:
         try:
             with Dao.connection.cursor() as cursor:
-                sql = "UPDATE person, teacher SET first_name=%s, last_name=%s, age=%s, hiring_date=%s WHERE id_teacher=%s"
+                sql = """
+                                UPDATE person
+                                INNER JOIN teacher
+                                    ON person.id_person = teacher.id_person
+                                SET person.first_name = %s,
+                                    person.last_name = %s,
+                                    person.age = %s,
+                                    teacher.hiring_date = %s
+                                WHERE teacher.id_teacher = %s
+                            """
                 cursor.execute(sql, (teacher.first_name, teacher.last_name, teacher.age, teacher.hiring_date, teacher.id))
                 Dao.connection.commit()
                 return True
@@ -90,9 +99,23 @@ class TeacherDao(Dao[Teacher]):
     def delete(self, id_teacher: int) -> bool:
         try:
             with Dao.connection.cursor() as cursor:
+                sql_select = "SELECT id_person FROM teacher WHERE id_teacher = %s"
+                cursor.execute(sql_select, (id_teacher,))
+                record = cursor.fetchone()
                 sql = "DELETE FROM teacher WHERE id_teacher=%s"
                 cursor.execute(sql, (id_teacher,))
+
+                id_max = cursor.lastrowid
+                sql_increment = "ALTER TABLE teacher AUTO_INCREMENT = %s;"
+                cursor.execute(sql_increment, (id_max,))
+
+                sql_supr2 = "DELETE FROM person WHERE id_person = %s"
+                cursor.execute(sql_supr2, (record["id_person"],))
                 Dao.connection.commit()
+
+                id_max = cursor.lastrowid
+                sql_increment = "ALTER TABLE person AUTO_INCREMENT = %s;"
+                cursor.execute(sql_increment, (id_max,))
                 return True
         except Exception as error:
             print(f"Erreur dans l'update du cours : {error}")

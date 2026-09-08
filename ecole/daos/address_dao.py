@@ -53,6 +53,10 @@ class AddressDao(Dao[Address]):
             with Dao.connection.cursor() as cursor:
                 sql = "DELETE FROM address WHERE id_address = %s"
                 cursor.execute(sql, (address.id))
+
+                id_max = cursor.lastrowid
+                sql_increment = "ALTER TABLE address AUTO_INCREMENT = %s;"
+                cursor.execute(sql_increment, (id_max,))
                 Dao.connection.commit()
                 return True
         except Exception as error:
