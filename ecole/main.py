@@ -61,14 +61,24 @@ Bienvenue dans notre école
         --------------------------
         """)
     while(True):
-        choix_1 = input("Choisir une fonctionalités :  1.Show course, 2.Select course")
+        choix_1 = input("Choisir une fonctionalités :  "
+                        "1.Afficher tous les cours, "
+                        "2.Afficher tous les éléves")
         if choix_1 == "1":
             test_show_courses()
+            choix_2 = input("Voulez vous selectionner un cours o/n")
+            if choix_2 == "o":
+                while (True):
+                    course_id = input("Saisissez le numéro du cours")
+                    choix_3 = input("1. Afficher les élves, 2.Modifier,"
+                                    " 3.Suprimer, 4.Sortir du menu")
+                    if choix_3 == "1":
+                        CourseDao().show_student(course_id)
+                    elif choix_3 == "4":
+                        break
         elif choix_1 == "2":
-            course_id = input("Saisissez le numéro du cours")
-            choix_2 = input("1. Afficher les élves, 2.Modifier, 3.Suprimer")
-            if choix_2 == "1":
-                CourseDao().show_student(course_id)
+            StudentDao().show_students()
+
 
 
 

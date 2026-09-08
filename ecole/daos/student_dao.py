@@ -148,3 +148,14 @@ class StudentDao(Dao[Student]):
             if course is not None:
                 print(course)
 
+    def show_students(self) -> None:
+        with Dao.connection.cursor() as cursor:
+            sql = """SELECT student_nbr FROM student ORDER BY id_person"""
+            cursor.execute(sql)
+            records = cursor.fetchall()
+            student_dao = StudentDao()
+            for record in records:
+                student = student_dao.read(record["student_nbr"])
+
+                if student is not None:
+                    print(student)
