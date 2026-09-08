@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c86a24d7-f81e-49af-bb5e-ad4a0b11967c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecole/daos/address_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecole/daos/address_dao.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecole/daos/course_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecole/daos/course_dao.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecole/daos/student_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecole/daos/student_dao.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ecole/daos/teacher_dao.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecole/daos/teacher_dao.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ecole/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/ecole/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

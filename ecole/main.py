@@ -51,6 +51,8 @@ Bienvenue dans notre école
     test_student_dao()
     test_teacher_dao()
 
+    test_show_courses()
+
 def initialize_student_counter() -> None:
     with Dao.connection.cursor() as cursor:
         sql = """
@@ -227,7 +229,16 @@ def test_teacher_dao() -> None:
     teacher_read = dao.read(teacher.id)
     print("READ après DELETE :", teacher_read)
 
+def test_show_courses() -> None:
+    print("\n===== TEST SHOW COURSES =====")
 
+    student_dao = StudentDao()
+    student = student_dao.read(1)
+
+    if student is not None:
+        student_dao.show_courses(student)
+    else:
+        print("Étudiant introuvable")
 
 if __name__ == '__main__':
     main()

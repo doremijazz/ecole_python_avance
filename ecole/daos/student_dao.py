@@ -1,3 +1,5 @@
+from daos.course_dao import CourseDao
+from models import course
 from models.student import Student
 from daos.dao import Dao
 from dataclasses import dataclass
@@ -28,7 +30,7 @@ class StudentDao(Dao[Student]):
                 record["last_name"],
                 record["age"]
             )
-            student.id = record["student_nbr"]
+            student.student_nbr = record["student_nbr"]
         else:
             student = None
         return student
@@ -93,4 +95,33 @@ class StudentDao(Dao[Student]):
         except Exception as error:
             print(f"Ereur lors de la suppression du cours : {error}")
             return False
+
+    def show_courses(self, student: Student) -> None:
+        with Dao.connection.cursor() as cursor:
+            sql = """
+                SELECT id_course
+                FROM takes
+                WHERE student_nbr = %s
+                ORDER BY id_course
+            """
+            print("Numéro recherché :", student.student_nbr)
+            cursor.execute(sql, (student.student_nbr,))
+            records = cursor.fetchall()
+
+        course_dao = CourseDao()
+
+        if len(records) == 0:
+            print("Cet étudiant ne suit aucun cours.")
+            return
+
+        print(
+            f"Cours suivis par "
+            f"{student.first_name} {student.last_name} :"
+        )
+
+        for record in records:
+            course = course_dao.read(record["id_course"])
+
+            if course is not None:
+                print(course)
 
