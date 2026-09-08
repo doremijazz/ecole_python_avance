@@ -232,6 +232,7 @@ def test_teacher_dao() -> None:
 def test_show_courses() -> None:
     print("\n===== TEST SHOW COURSES =====")
 
+    print("\n### Show Student courses ###")
     student_dao = StudentDao()
     student = student_dao.read(1)
 
@@ -239,6 +240,18 @@ def test_show_courses() -> None:
         student_dao.show_courses(student)
     else:
         print("Étudiant introuvable")
+
+    print("\n### Show Teacher courses ###")
+    teacher_dao = TeacherDao()
+    teacher = teacher_dao.read(1)
+    if teacher is not None:
+        teacher_dao.show_courses(teacher)
+    else:
+        print("Enseignant introuvable")
+
+    print("\n### Show courses for director ###")
+    course_dao = CourseDao()
+    course_dao.show_courses()
 
 if __name__ == '__main__':
     main()

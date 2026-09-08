@@ -104,3 +104,15 @@ class CourseDao(Dao[Course]):
             Dao.connection.rollback()
             print(f"Erreur pendant la supression du cours : {error}")
             return False
+
+    def show_courses(self):
+        with Dao.connection.cursor() as cursor:
+            sql = "SELECT * FROM course ORDER BY id_course"
+            cursor.execute(sql)
+            records = cursor.fetchall()
+            course_dao = CourseDao()
+            for record in records:
+                course = course_dao.read(record["id_course"])
+
+                if course is not None:
+                    print(course)

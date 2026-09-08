@@ -1,3 +1,4 @@
+
 from models.teacher import Teacher
 from daos.dao import Dao
 from dataclasses import dataclass
@@ -97,3 +98,15 @@ class TeacherDao(Dao[Teacher]):
             print(f"Erreur dans l'update du cours : {error}")
             return False
 
+    def show_courses(self, teacher : Teacher) -> list:
+        with Dao.connection.cursor() as cursor:
+            sql = "SELECT * FROM course WHERE id_teacher=%s"
+            cursor.execute(sql, (teacher.id,))
+            courses = cursor.fetchall()
+            from daos.course_dao import CourseDao
+            course_dao = CourseDao()
+            for course in courses:
+                course = course_dao.read(course["id_course"])
+
+                if course is not None:
+                    print(course)
