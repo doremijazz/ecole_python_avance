@@ -78,6 +78,17 @@ Bienvenue dans notre école
                         break
         elif choix_1 == "2":
             StudentDao().show_students()
+            choix_4 = input("Voulez vous selectionner un cours o/n")
+            if choix_4 == "o":
+                while (True):
+                    student_id = input("Saisissez le numéro de l'étudiant")
+                    print(StudentDao().read(student_id))
+                    choix_5 = input("1.Modifier,"
+                                    " 2.Suprimer, 3.Sortir du menu")
+                    if choix_5 == "1":
+                        pass
+                    elif choix_5 == "4":
+                        break
 
 
 
